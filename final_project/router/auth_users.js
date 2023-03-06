@@ -29,30 +29,32 @@ regd_users.post("/login", (req,res) => {
     }
    if (authenticatedUser(username,password)) {
       let accessToken = jwt.sign({
-        data: password
+        data: username
       }, 'access');
       req.session.authorization = {
-        accessToken,username
+        accessToken
     }
     return res.status(200).send("User successfully logged in");
     } else {
       return res.status(208).json({message: "Invalid Login. Check username and password"});
     }});
+    const isthere(i,b){
+        const b= Object.keys(books)
+        const i=b.filter(())
+    }
 
 // Add a book review
 regd_users.put("/auth/review/:i", (req, res) => {
-  const i=req.params
+  const i=req.params.i;
   const review=req.query.review;
-  let b=jwt.verify(req.session.authorization['username'])
-  let n=books[i].reviews.push({'username':b,"review":review})
-  if(n){
-    return res.status(300).json(books[i]);
-  }else{
-    return res.status(300).json("error");
-  }
-  
+  let b=jwt.verify(req.session.authorization['accessToken'],'access')
+  if(isthere(i,b)){
 
-  
+  }else{
+
+  }
+
+  res.json(b.data)
 });
 
 module.exports.authenticated = regd_users;
