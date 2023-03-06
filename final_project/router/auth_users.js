@@ -38,9 +38,9 @@ regd_users.post("/login", (req,res) => {
     } else {
       return res.status(208).json({message: "Invalid Login. Check username and password"});
     }});
-    const isthere(i,b){
+    const isthere=(i,b)=>{
         const b= Object.keys(books)
-        const i=b.filter(())
+        const i=b.filter((i,b))
     }
 
 // Add a book review
