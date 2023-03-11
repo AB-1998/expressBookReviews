@@ -39,22 +39,19 @@ regd_users.post("/login", (req,res) => {
       return res.status(208).json({message: "Invalid Login. Check username and password"});
     }});
     const isthere=(i,b)=>{
-        const b= Object.keys(books)
-        const i=b.filter((i,b))
+        
     }
 
 // Add a book review
 regd_users.put("/auth/review/:i", (req, res) => {
   const i=req.params.i;
   const review=req.query.review;
-  let b=jwt.verify(req.session.authorization['accessToken'],'access')
-  if(isthere(i,b)){
+  let b=jwt.verify(req.session.authorization['accessToken'],'access').data
+  
+  
+  books[i].review={"username":b,"review":review}
 
-  }else{
-
-  }
-
-  res.json(b.data)
+  res.json(books[1])
 });
 
 module.exports.authenticated = regd_users;
