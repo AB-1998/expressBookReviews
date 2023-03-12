@@ -3,22 +3,13 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
-const doesExist = (username)=>{
-    let userswithsamename = users.filter((user)=>{
-      return user.username === username
-    });
-    if(userswithsamename.length > 0){
-      return true;
-    } else {
-      return false;
-    }
-  }
+
 
 public_users.post("/register", (req,res) => {
     const username = req.body.username;
     const password = req.body.password;
     if (username && password) {
-      if (!doesExist(username)) {
+      if (!isValid(username)) {
         users.push({"username":username,"password":password});
         return res.status(200).json({message: "User successfully registred. Now you can login"});
       } else {
@@ -29,15 +20,27 @@ public_users.post("/register", (req,res) => {
   });
 
 // Get the book list available in the shop
-public_users.get('/:a',function (req, res,next) {
-   
-  res.json(books)
+public_users.get('/',function (req, res,next) {
+   new Promise((resolve,reject)=>{
+       if(books){
+           resolve()
+       }else{
+           reject()
+       }
+   }).then(()=>{res.status(201).json(books)}).catch(()=>{throw new Error("eroor ")})
+  
 });
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
   let isbn =req.params.isbn;
-  return res.status(300).json(books[isbn]);
+  new Promise((resolve,reject)=>{
+    if(books[isbn]!=0){
+        resolve()
+    }else{
+        reject()
+    }
+}).then(()=>{res.status(201).json(books[isbn])}).catch(()=>{throw new Error("not found the book ")})
  });
   
 // Get book details based on author
@@ -45,8 +48,14 @@ public_users.get('/author/:author',function (req, res) {
   let auth= req.params.author;
   let list= Object.keys(books)
   let b= list.filter((s)=> books[s].author==auth)
-  
-   res.status(200).json(books[b]);
+  new Promise((resolve,reject)=>{
+    if(b.length>0){
+        resolve()
+    }else{
+        reject()
+    }
+}).then(()=>{res.status(201).json(book[b])}).catch(()=>{throw new Error("not found the book ")})
+   
 });
 
 // Get all books based on title
@@ -54,8 +63,15 @@ public_users.get('/title/:title',function (req, res) {
     const auth= req.params.title;
     const list= Object.keys(books)
     const b= list.filter((s)=> books[s].title===auth)
-    
-     res.status(200).json(books[b]);
+    new Promise((resolve,reject)=>{
+        if(b.length>0){
+            resolve()
+        }else{
+            reject()
+        }
+    }).then(()=>{res.status(201).json(book[b])}).catch(()=>{throw new Error("not found the book ")})
+       
+     
 });
 
 //  Get book review
